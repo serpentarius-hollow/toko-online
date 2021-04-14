@@ -19,12 +19,32 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   String sizeValue;
   String colorValue;
+  bool isFavorite;
 
   @override
   void initState() {
     super.initState();
     sizeValue = 'S';
     colorValue = '#FF0000';
+    isFavorite = widget.item.isFavorite;
+  }
+
+  void _handleSizeButton(String itemSize) {
+    setState(() {
+      sizeValue = itemSize;
+    });
+  }
+
+  void _handleColorButton(String itemColor) {
+    setState(() {
+      colorValue = itemColor;
+    });
+  }
+
+  void _handleFavoriteButton() {
+    setState(() {
+      isFavorite = !isFavorite;
+    });
   }
 
   @override
@@ -32,7 +52,11 @@ class _DetailScreenState extends State<DetailScreen> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: _buildAppBar(
+        isFavorite,
+        () => _handleFavoriteButton(),
+        context,
+      ),
       backgroundColor: Colors.white,
       body: Column(
         children: [
@@ -71,7 +95,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     ],
                   ),
                 ),
-                _buildPriceRow(size, context),
+                _buildPriceRow(widget.item.itemPrice, size, context),
               ],
             ),
           )
@@ -80,7 +104,7 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Container _buildPriceRow(Size size, BuildContext context) {
+  Container _buildPriceRow(double itemPrice, Size size, BuildContext context) {
     return Container(
       height: size.height * 0.13,
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -95,7 +119,7 @@ class _DetailScreenState extends State<DetailScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '\$999.99',
+            '\$$itemPrice',
             style: Theme.of(context).textTheme.headline5.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).primaryColor,
@@ -130,27 +154,65 @@ class _DetailScreenState extends State<DetailScreen> {
       children: [
         const Text('Available Color'),
         const SizedBox(width: 30),
-        _buildColorButton('#FF0000', colorValue, context),
+        _buildColorButton(
+          '#FF0000',
+          colorValue,
+          context,
+          () => _handleColorButton('#FF0000'),
+        ),
         const SizedBox(width: 10),
-        _buildColorButton('#0000FF', colorValue, context),
+        _buildColorButton(
+          '#0000FF',
+          colorValue,
+          context,
+          () => _handleColorButton('#0000FF'),
+        ),
         const SizedBox(width: 10),
-        _buildColorButton('#00FF00', colorValue, context),
+        _buildColorButton(
+          '#00FF00',
+          colorValue,
+          context,
+          () => _handleColorButton('#00FF00'),
+        ),
       ],
     );
   }
 
-  Row _buildSizeRow(BuildContext context, String sizeValue) {
+  Row _buildSizeRow(
+    BuildContext context,
+    String sizeValue,
+  ) {
     return Row(
       children: [
         const Text('Size'),
         const SizedBox(width: 30),
-        _buildSizeButton('S', sizeValue, context),
+        _buildSizeButton(
+          'S',
+          sizeValue,
+          context,
+          () => _handleSizeButton('S'),
+        ),
         const SizedBox(width: 10),
-        _buildSizeButton('M', sizeValue, context),
+        _buildSizeButton(
+          'M',
+          sizeValue,
+          context,
+          () => _handleSizeButton('M'),
+        ),
         const SizedBox(width: 10),
-        _buildSizeButton('L', sizeValue, context),
+        _buildSizeButton(
+          'L',
+          sizeValue,
+          context,
+          () => _handleSizeButton('L'),
+        ),
         const SizedBox(width: 10),
-        _buildSizeButton('XL', sizeValue, context),
+        _buildSizeButton(
+          'XL',
+          sizeValue,
+          context,
+          () => _handleSizeButton('XL'),
+        ),
       ],
     );
   }
@@ -159,6 +221,7 @@ class _DetailScreenState extends State<DetailScreen> {
     String itemColor,
     String colorValue,
     BuildContext context,
+    void Function() colorButtonOnTap,
   ) {
     return Container(
       decoration: BoxDecoration(
@@ -172,7 +235,7 @@ class _DetailScreenState extends State<DetailScreen> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
-          onTap: () {},
+          onTap: colorButtonOnTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             child: CircleAvatar(
@@ -189,6 +252,7 @@ class _DetailScreenState extends State<DetailScreen> {
     String itemSize,
     String sizeValue,
     BuildContext context,
+    void Function() sizeButtonOnTap,
   ) {
     return Container(
       decoration: BoxDecoration(
@@ -201,7 +265,7 @@ class _DetailScreenState extends State<DetailScreen> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
-          onTap: () {},
+          onTap: sizeButtonOnTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
             child: Text(itemSize),
@@ -211,7 +275,11 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(
+    bool isFavorite,
+    void Function() onFavoriteButtonPressed,
+    BuildContext context,
+  ) {
     return AppBar(
       leading: BackButton(color: Theme.of(context).primaryColor),
       title: Center(
@@ -228,15 +296,14 @@ class _DetailScreenState extends State<DetailScreen> {
         IconButton(
           icon: CircleAvatar(
             radius: 15,
-            backgroundColor:
-                widget.item.isFavorite ? Colors.red : Colors.transparent,
+            backgroundColor: isFavorite ? Colors.red : Colors.transparent,
             child: Icon(
               Icons.favorite,
-              color: widget.item.isFavorite ? Colors.white : Colors.grey[400],
+              color: isFavorite ? Colors.white : Colors.grey[400],
               size: 20,
             ),
           ),
-          onPressed: null,
+          onPressed: onFavoriteButtonPressed,
         ),
       ],
     );
