@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class BottomNavBar extends StatelessWidget {
   final int indexActive;
   final Size size;
+  final void Function(int) onButtonPressed;
 
   const BottomNavBar({
     Key key,
     @required this.indexActive,
     @required this.size,
+    @required this.onButtonPressed,
   }) : super(key: key);
 
   @override
@@ -30,7 +32,7 @@ class BottomNavBar extends StatelessWidget {
                         ? Theme.of(context).primaryColor
                         : null,
                   ),
-                  onPressed: null,
+                  onPressed: () => onButtonPressed(0),
                 ),
                 IconButton(
                   icon: Icon(
@@ -39,7 +41,7 @@ class BottomNavBar extends StatelessWidget {
                         ? Theme.of(context).primaryColor
                         : null,
                   ),
-                  onPressed: null,
+                  onPressed: () => onButtonPressed(1),
                 ),
               ],
             ),
@@ -56,7 +58,7 @@ class BottomNavBar extends StatelessWidget {
                         ? Theme.of(context).primaryColor
                         : null,
                   ),
-                  onPressed: null,
+                  onPressed: () => onButtonPressed(2),
                 ),
                 IconButton(
                   icon: Icon(
@@ -65,7 +67,7 @@ class BottomNavBar extends StatelessWidget {
                         ? Theme.of(context).primaryColor
                         : null,
                   ),
-                  onPressed: null,
+                  onPressed: () => onButtonPressed(3),
                 ),
               ],
             ),

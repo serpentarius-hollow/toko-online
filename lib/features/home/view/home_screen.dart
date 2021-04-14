@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/widgets/bottom_nav_bar.dart';
 import '../../../core/widgets/cart_button.dart';
+import '../../../core/widgets/top_app_bar.dart';
 import '../../favorites/favorites_body.dart';
 import '../../orders/orders_body.dart';
 import '../../profile/profile_body.dart';
@@ -40,7 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: TopAppBar(index: pageIndex),
+      ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: PageView(
         controller: _pageController,
@@ -57,32 +61,11 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavBar(
         size: size,
         indexActive: pageIndex,
+        onButtonPressed: (index) {
+          _pageController.jumpToPage(index);
+          _handlePageChange(index);
+        },
       ),
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      leading: const IconButton(
-        icon: Icon(Icons.menu),
-        onPressed: null,
-      ),
-      title: Center(
-        child: Text(
-          'XE',
-          style: TextStyle(
-            color: Theme.of(context).primaryColor,
-          ),
-        ),
-      ),
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      actions: const [
-        IconButton(
-          icon: Icon(Icons.search),
-          onPressed: null,
-        ),
-      ],
     );
   }
 }
