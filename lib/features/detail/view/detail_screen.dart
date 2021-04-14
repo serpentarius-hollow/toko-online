@@ -318,8 +318,9 @@ class _DetailScreenState extends State<DetailScreen> {
       backgroundColor: Colors.transparent,
       elevation: 0,
       actions: [
-        IconButton(
-          icon: CircleAvatar(
+        GestureDetector(
+          onTap: onFavoriteButtonPressed,
+          child: CircleAvatar(
             radius: 15,
             backgroundColor: isFavorite ? Colors.red : Colors.transparent,
             child: Icon(
@@ -328,7 +329,6 @@ class _DetailScreenState extends State<DetailScreen> {
               size: 20,
             ),
           ),
-          onPressed: onFavoriteButtonPressed,
         ),
       ],
     );
