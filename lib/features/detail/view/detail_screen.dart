@@ -63,7 +63,7 @@ class _DetailScreenState extends State<DetailScreen> {
           Column(
             children: [
               _buildDiscount(context, widget.item.discount),
-              _buildImage(size, widget.item.imagePath, colorValue),
+              _buildImage(size, widget.item.imagePath, colorValue, sizeValue),
             ],
           ),
           Expanded(
@@ -89,8 +89,9 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       const SizedBox(height: 10),
                       const Text('Description Text'),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 20),
                       _buildSizeRow(context, sizeValue),
+                      const SizedBox(height: 10),
                       _buildColorRow(context, colorValue),
                     ],
                   ),
@@ -129,6 +130,9 @@ class _DetailScreenState extends State<DetailScreen> {
             onPressed: () {},
             highlightColor: Theme.of(context).accentColor,
             splashColor: Theme.of(context).accentColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: Row(
               children: [
                 Icon(
@@ -264,7 +268,7 @@ class _DetailScreenState extends State<DetailScreen> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
           onTap: sizeButtonOnTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
@@ -336,7 +340,28 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  AspectRatio _buildImage(Size size, String imagePath, String colorValue) {
+  double _changeImageSize(String sizeValue, Size size) {
+    switch (sizeValue) {
+      case 'M':
+        return size.width * 0.43;
+        break;
+      case 'L':
+        return size.width * 0.46;
+        break;
+      case 'XL':
+        return size.width * 0.49;
+        break;
+      default:
+        return size.width * 0.4;
+    }
+  }
+
+  AspectRatio _buildImage(
+    Size size,
+    String imagePath,
+    String colorValue,
+    String sizeValue,
+  ) {
     return AspectRatio(
       aspectRatio: 1.4,
       child: Stack(
@@ -352,7 +377,7 @@ class _DetailScreenState extends State<DetailScreen> {
           Image.asset(
             imagePath,
             fit: BoxFit.contain,
-            width: size.width * 0.4,
+            width: _changeImageSize(sizeValue, size),
           ),
         ],
       ),
