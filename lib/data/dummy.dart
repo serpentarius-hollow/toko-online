@@ -1,6 +1,6 @@
 import 'model/item.dart';
 
-List<Item> items = [
+const List<Item> items = [
   Item(
     id: 'SNK01',
     category: 'SNK',

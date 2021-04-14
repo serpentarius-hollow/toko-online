@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-class Item {
+class Item extends Equatable {
   final String id;
   final String category;
   final String itemName;
@@ -10,7 +11,7 @@ class Item {
   final int rating;
   final String imagePath;
 
-  Item({
+  const Item({
     @required this.id,
     @required this.category,
     @required this.itemName,
@@ -20,4 +21,29 @@ class Item {
     @required this.rating,
     @required this.imagePath,
   });
+
+  Item copyWith({bool isFavorite}) {
+    return Item(
+      id: id,
+      category: category,
+      itemName: itemName,
+      itemPrice: itemPrice,
+      discount: discount,
+      isFavorite: isFavorite ?? this.isFavorite,
+      rating: rating,
+      imagePath: imagePath,
+    );
+  }
+
+  @override
+  List<Object> get props => [
+        id,
+        category,
+        itemName,
+        itemPrice,
+        discount,
+        isFavorite,
+        rating,
+        imagePath,
+      ];
 }
