@@ -1,25 +1,15 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:toko_online/core/router/router_name.dart';
+import 'package:toko_online/data/model/item.dart';
 
 import '../../../core/constant/constant.dart';
 
 class ItemCard extends StatelessWidget {
-  final double discount;
-  final bool isFavorite;
-  final String imagePath;
-  final String itemName;
-  final double itemPrice;
-  final int rating;
+  final Item item;
 
   const ItemCard({
     Key key,
-    @required this.discount,
-    @required this.isFavorite,
-    @required this.imagePath,
-    @required this.itemName,
-    @required this.itemPrice,
-    @required this.rating,
+    @required this.item,
   }) : super(key: key);
 
   @override
@@ -30,68 +20,80 @@ class ItemCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(kPadding),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () => Navigator.pushNamed(
+            context,
+            routeDetail,
+            arguments: {'item': item},
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(kPadding),
+            child: Column(
               children: [
-                buildDiscount(context, discount),
-                buildFavorite(isFavorite: isFavorite),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Hero(
-              tag: 'itemImage',
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Stack(
-                  alignment: AlignmentDirectional.center,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: size.width * 0.3,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.primaries[
-                                Random().nextInt(Colors.primaries.length)]
-                            .withOpacity(0.4),
-                      ),
-                    ),
-                    Image.asset(
-                      imagePath,
-                      fit: BoxFit.contain,
-                      width: size.width * 0.3,
-                    ),
+                    _buildDiscount(context, item.discount),
+                    _buildFavorite(isFavorite: item.isFavorite),
                   ],
                 ),
-              ),
+                const SizedBox(height: 10),
+                _buildImage(size),
+                const SizedBox(height: 10),
+                Text(
+                  item.itemName,
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  '\$ ${item.itemPrice.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                _buildRating(item.rating),
+              ],
             ),
-            const SizedBox(height: 10),
-            Text(
-              itemName,
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              '\$ ${itemPrice.toStringAsFixed(2)}',
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10),
-            buildRating(rating),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  CircleAvatar buildFavorite({bool isFavorite}) {
+  AspectRatio _buildImage(Size size) {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: [
+          Container(
+            width: size.width * 0.3,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              // color: Colors.primaries[Random().nextInt(Colors.primaries.length)]
+              //     .withOpacity(0.4),
+              color: Colors.grey[300],
+            ),
+          ),
+          Image.asset(
+            item.imagePath,
+            fit: BoxFit.contain,
+            width: size.width * 0.3,
+          ),
+        ],
+      ),
+    );
+  }
+
+  CircleAvatar _buildFavorite({bool isFavorite}) {
     return CircleAvatar(
       radius: 15,
       backgroundColor: isFavorite ? Colors.red : Colors.transparent,
@@ -103,7 +105,7 @@ class ItemCard extends StatelessWidget {
     );
   }
 
-  Visibility buildDiscount(BuildContext context, double discount) {
+  Visibility _buildDiscount(BuildContext context, double discount) {
     return Visibility(
       visible: discount > 0,
       child: Container(
@@ -120,7 +122,7 @@ class ItemCard extends StatelessWidget {
     );
   }
 
-  Row buildRating(int rating) {
+  Row _buildRating(int rating) {
     final List<Widget> starIcons = [];
 
     for (var i = 0; i < 5; i++) {

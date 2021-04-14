@@ -73,7 +73,7 @@ class _HomeBodyState extends State<HomeBody> with TickerProviderStateMixin {
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
           ),
-          child: buildTabBar(context),
+          child: _buildTabBar(context),
         ),
         const SizedBox(
           height: 10,
@@ -89,7 +89,7 @@ class _HomeBodyState extends State<HomeBody> with TickerProviderStateMixin {
     );
   }
 
-  TabBar buildTabBar(BuildContext context) {
+  TabBar _buildTabBar(BuildContext context) {
     return TabBar(
       controller: _tabController,
       indicatorColor: Colors.transparent,

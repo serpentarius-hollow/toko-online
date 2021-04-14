@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'core/router/router.dart';
+import 'core/router/router_name.dart';
 import 'core/theme/theme_data.dart';
-import 'features/home/view/home_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,7 +14,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Toko Online',
       theme: themeData(),
-      home: HomeScreen(),
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: AppRouter().onGenerateRoute,
+      initialRoute: routeHome,
     );
   }
 }

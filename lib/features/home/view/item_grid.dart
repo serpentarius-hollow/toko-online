@@ -21,17 +21,7 @@ class ItemGrid extends StatelessWidget {
       childAspectRatio: 0.55,
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      children: items
-          .map(
-            (item) => ItemCard(
-                discount: item.discount,
-                isFavorite: item.isFavorite,
-                imagePath: item.imagePath,
-                itemName: item.itemName,
-                itemPrice: item.itemPrice,
-                rating: item.rating),
-          )
-          .toList(),
+      children: items.map((item) => ItemCard(item: item)).toList(),
     );
   }
 }

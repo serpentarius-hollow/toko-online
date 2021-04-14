@@ -9,7 +9,7 @@ class HomeScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: buildAppBar(context),
+      appBar: _buildAppBar(context),
       backgroundColor: Theme.of(context).backgroundColor,
       body: const HomeBody(),
       floatingActionButton: FloatingActionButton(
@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  AppBar buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       leading: const IconButton(
         icon: Icon(Icons.menu),
