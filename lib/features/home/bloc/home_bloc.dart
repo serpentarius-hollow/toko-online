@@ -22,13 +22,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     if (event is HomeItemClickedFavorite) {
       if (currentState is HomeLoadSuccess) {
-        var newItems = currentState.items;
+        final newItems = List<Item>.from(currentState.items);
 
-        newItems = newItems.map((item) {
-          if (item.id == event.id) {
-            item.copyWith(isFavorite: !item.isFavorite);
-          }
-        }).toList();
+        final index = newItems.indexWhere((element) => element.id == event.id);
+
+        newItems[index] =
+            newItems[index].copyWith(isFavorite: !newItems[index].isFavorite);
 
         final newState = currentState.copyWith(items: newItems);
 

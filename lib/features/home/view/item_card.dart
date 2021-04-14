@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toko_online/core/router/router_name.dart';
 import 'package:toko_online/data/model/item.dart';
+import 'package:toko_online/features/home/bloc/home_bloc.dart';
 
 import '../../../core/constant/constant.dart';
 
@@ -37,7 +39,8 @@ class ItemCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildDiscount(context, item.discount),
-                    _buildFavorite(isFavorite: item.isFavorite),
+                    _buildFavorite(item.id, context,
+                        isFavorite: item.isFavorite),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -93,14 +96,20 @@ class ItemCard extends StatelessWidget {
     );
   }
 
-  CircleAvatar _buildFavorite({bool isFavorite}) {
-    return CircleAvatar(
-      radius: 15,
-      backgroundColor: isFavorite ? Colors.red : Colors.transparent,
-      child: Icon(
-        Icons.favorite,
-        color: isFavorite ? Colors.white : Colors.grey[400],
-        size: 20,
+  GestureDetector _buildFavorite(String id, BuildContext context,
+      {bool isFavorite}) {
+    return GestureDetector(
+      onTap: () {
+        context.read<HomeBloc>().add(HomeItemClickedFavorite(id));
+      },
+      child: CircleAvatar(
+        radius: 15,
+        backgroundColor: isFavorite ? Colors.red : Colors.transparent,
+        child: Icon(
+          Icons.favorite,
+          color: isFavorite ? Colors.white : Colors.grey[400],
+          size: 20,
+        ),
       ),
     );
   }

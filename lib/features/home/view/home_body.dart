@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toko_online/features/home/bloc/home_bloc.dart';
 
 import '../../../core/constant/constant.dart';
-import '../../../data/dummy.dart';
 import 'item_grid.dart';
 
 class HomeBody extends StatefulWidget {
@@ -14,10 +15,6 @@ class HomeBody extends StatefulWidget {
 }
 
 class _HomeBodyState extends State<HomeBody> with TickerProviderStateMixin {
-  final _snk = items.where((element) => element.category == 'SNK').toList();
-  final _wtc = items.where((element) => element.category == 'WTC').toList();
-  final _bkp = items.where((element) => element.category == 'BKP').toList();
-
   TabController _tabController;
 
   @override
@@ -78,13 +75,33 @@ class _HomeBodyState extends State<HomeBody> with TickerProviderStateMixin {
         const SizedBox(
           height: 10,
         ),
-        Center(
-          child: [
-            ItemGrid(items: _snk),
-            ItemGrid(items: _wtc),
-            ItemGrid(items: _bkp),
-          ][_tabController.index],
-        ),
+        BlocConsumer<HomeBloc, HomeState>(
+          listener: (context, state) {
+            // TODO: implement listener
+          },
+          builder: (context, state) {
+            if (state is HomeLoadSuccess) {
+              final _snk = state.items
+                  .where((element) => element.category == 'SNK')
+                  .toList();
+              final _wtc = state.items
+                  .where((element) => element.category == 'WTC')
+                  .toList();
+              final _bkp = state.items
+                  .where((element) => element.category == 'BKP')
+                  .toList();
+
+              return Center(
+                child: [
+                  ItemGrid(items: _snk),
+                  ItemGrid(items: _wtc),
+                  ItemGrid(items: _bkp),
+                ][_tabController.index],
+              );
+            }
+            return Container();
+          },
+        )
       ],
     );
   }

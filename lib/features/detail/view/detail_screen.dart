@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toko_online/features/home/bloc/home_bloc.dart';
 
 import '../../../core/constant/constant.dart';
 import '../../../core/constant/hexcolor.dart';
@@ -41,9 +43,10 @@ class _DetailScreenState extends State<DetailScreen> {
     });
   }
 
-  void _handleFavoriteButton() {
+  void _handleFavoriteButton(String id) {
     setState(() {
       isFavorite = !isFavorite;
+      context.read<HomeBloc>().add(HomeItemClickedFavorite(id));
     });
   }
 
@@ -54,7 +57,7 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
       appBar: _buildAppBar(
         isFavorite,
-        () => _handleFavoriteButton(),
+        () => _handleFavoriteButton(widget.item.id),
         context,
       ),
       backgroundColor: Colors.white,

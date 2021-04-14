@@ -8,6 +8,8 @@ abstract class HomeState extends Equatable {
 
 class HomeInitial extends HomeState {}
 
+class HomeLoadInProgress extends HomeState {}
+
 class HomeLoadSuccess extends HomeState {
   final List<Item> items;
 
