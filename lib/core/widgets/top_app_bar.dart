@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class TopAppBar extends StatelessWidget {
+class TopAppBar extends StatefulWidget {
   final int index;
 
   const TopAppBar({
@@ -9,28 +9,63 @@ class TopAppBar extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _TopAppBarState createState() => _TopAppBarState();
+}
+
+class _TopAppBarState extends State<TopAppBar> {
+  bool toggleSearch;
+
+  @override
+  void initState() {
+    super.initState();
+    toggleSearch = false;
+  }
+
+  void _handleToggleSearch() {
+    setState(() {
+      toggleSearch = !toggleSearch;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    switch (index) {
+    switch (widget.index) {
       case 0:
         return AppBar(
-          leading: const IconButton(
-            icon: Icon(Icons.menu),
+          leading: IconButton(
+            icon: Icon(
+              Icons.menu,
+              color: Theme.of(context).primaryColor,
+            ),
             onPressed: null,
           ),
           title: Center(
-            child: Text(
-              'XE',
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
+            child: toggleSearch
+                ? TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'Search...',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: (val) => _handleToggleSearch(),
+                  )
+                : Text(
+                    'XE',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
-          actions: const [
+          actions: [
             IconButton(
-              icon: Icon(Icons.search),
-              onPressed: null,
+              icon: Icon(
+                toggleSearch ? Icons.close : Icons.search,
+                color: Theme.of(context).primaryColor,
+              ),
+              onPressed: () => _handleToggleSearch(),
             ),
           ],
         );
