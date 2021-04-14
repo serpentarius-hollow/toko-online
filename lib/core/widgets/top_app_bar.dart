@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toko_online/features/home/bloc/home_bloc.dart';
 
 class TopAppBar extends StatefulWidget {
   final int index;
@@ -27,6 +29,13 @@ class _TopAppBarState extends State<TopAppBar> {
     });
   }
 
+  void _handleSearchBar(String query) {
+    setState(() {
+      context.read<HomeBloc>().add(HomeSearchBar(query));
+      toggleSearch = !toggleSearch;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     switch (widget.index) {
@@ -48,7 +57,7 @@ class _TopAppBarState extends State<TopAppBar> {
                       contentPadding: EdgeInsets.zero,
                     ),
                     textInputAction: TextInputAction.search,
-                    onSubmitted: (val) => _handleToggleSearch(),
+                    onSubmitted: (val) => _handleSearchBar(val),
                   )
                 : Text(
                     'XE',

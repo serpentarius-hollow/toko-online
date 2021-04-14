@@ -13,15 +13,25 @@ class ItemGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 2,
-      primary: false,
-      crossAxisSpacing: 10.0,
-      mainAxisSpacing: 10.0,
-      childAspectRatio: 0.55,
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      children: items.map((item) => ItemCard(item: item)).toList(),
-    );
+    if (items.isNotEmpty) {
+      return GridView.count(
+        crossAxisCount: 2,
+        primary: false,
+        crossAxisSpacing: 10.0,
+        mainAxisSpacing: 10.0,
+        childAspectRatio: 0.55,
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        children: items.map((item) => ItemCard(item: item)).toList(),
+      );
+    } else {
+      return Column(
+        children: const [
+          SizedBox(height: 100),
+          Text('No Items Found'),
+        ],
+      );
+      // return const Expanded(child: Text('No Items Found'));
+    }
   }
 }

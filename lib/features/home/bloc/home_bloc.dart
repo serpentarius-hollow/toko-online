@@ -34,5 +34,33 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         yield newState;
       }
     }
+
+    if (event is HomeSearchBar) {
+      if (currentState is HomeLoadSuccess) {
+        if (event.query.isNotEmpty) {
+          final lowCaseQuery = event.query.toLowerCase();
+
+          var filteredList = List<Item>.from(currentState.items);
+
+          filteredList = filteredList.where((element) {
+            return element.itemName.toLowerCase().contains(lowCaseQuery);
+          }).toList();
+
+          final newState = currentState.copyWith(items: filteredList);
+
+          yield newState;
+        }
+      }
+    }
+
+    if (event is HomeRefresh) {
+      if (currentState is HomeLoadSuccess) {
+        final newItems = List<Item>.from(items);
+
+        final newState = currentState.copyWith(items: newItems);
+
+        yield newState;
+      }
+    }
   }
 }

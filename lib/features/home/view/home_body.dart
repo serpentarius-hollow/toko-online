@@ -36,73 +36,80 @@ class _HomeBodyState extends State<HomeBody> with TickerProviderStateMixin {
     }
   }
 
+  Future<void> _handleRefresh() async {
+    context.read<HomeBloc>().add(HomeRefresh());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(kPadding),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Our Products',
-              style: Theme.of(context).textTheme.headline5.copyWith(
-                    fontWeight: FontWeight.bold,
+    return RefreshIndicator(
+      onRefresh: _handleRefresh,
+      child: ListView(
+        padding: const EdgeInsets.all(kPadding),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Our Products',
+                style: Theme.of(context).textTheme.headline5.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Sort by',
+                    style: TextStyle(color: Colors.grey[800]),
                   ),
-            ),
-            Row(
-              children: [
-                Text(
-                  'Sort by',
-                  style: TextStyle(color: Colors.grey[800]),
-                ),
-                DropdownButton(
-                  items: const [],
-                  onChanged: null,
-                ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Theme(
-          data: ThemeData(
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
+                  DropdownButton(
+                    items: const [],
+                    onChanged: null,
+                  ),
+                ],
+              ),
+            ],
           ),
-          child: _buildTabBar(context),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        BlocConsumer<HomeBloc, HomeState>(
-          listener: (context, state) {
-            // TODO: implement listener
-          },
-          builder: (context, state) {
-            if (state is HomeLoadSuccess) {
-              final _snk = state.items
-                  .where((element) => element.category == 'SNK')
-                  .toList();
-              final _wtc = state.items
-                  .where((element) => element.category == 'WTC')
-                  .toList();
-              final _bkp = state.items
-                  .where((element) => element.category == 'BKP')
-                  .toList();
+          const SizedBox(height: 10),
+          Theme(
+            data: ThemeData(
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+            ),
+            child: _buildTabBar(context),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          BlocConsumer<HomeBloc, HomeState>(
+            listener: (context, state) {
+              // TODO: implement listener
+            },
+            builder: (context, state) {
+              if (state is HomeLoadSuccess) {
+                final _snk = state.items
+                    .where((element) => element.category == 'SNK')
+                    .toList();
+                final _wtc = state.items
+                    .where((element) => element.category == 'WTC')
+                    .toList();
+                final _bkp = state.items
+                    .where((element) => element.category == 'BKP')
+                    .toList();
 
-              return Center(
-                child: [
-                  ItemGrid(items: _snk),
-                  ItemGrid(items: _wtc),
-                  ItemGrid(items: _bkp),
-                ][_tabController.index],
-              );
-            }
-            return Container();
-          },
-        )
-      ],
+                return Center(
+                  child: [
+                    ItemGrid(items: _snk),
+                    ItemGrid(items: _wtc),
+                    ItemGrid(items: _bkp),
+                  ][_tabController.index],
+                );
+              }
+              return Container();
+            },
+          )
+        ],
+      ),
     );
   }
 
