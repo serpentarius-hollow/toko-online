@@ -19,3 +19,12 @@ class CartLoadSuccess extends CartState {
   @override
   List<Object> get props => [count];
 }
+
+class CartAddSuccess extends CartState {
+  final String message;
+
+  const CartAddSuccess(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

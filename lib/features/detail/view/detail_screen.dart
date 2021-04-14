@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:toko_online/features/home/bloc/home_bloc.dart';
 
 import '../../../core/constant/constant.dart';
 import '../../../core/constant/hexcolor.dart';
 import '../../../data/model/item.dart';
+import '../../cart/bloc/cart_bloc.dart';
+import '../../home/bloc/home_bloc.dart';
 
 class DetailScreen extends StatefulWidget {
   final Item item;
@@ -50,6 +51,10 @@ class _DetailScreenState extends State<DetailScreen> {
     });
   }
 
+  void _handleAddToCartButton() {
+    context.read<CartBloc>().add(CartAddedItem());
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -61,49 +66,62 @@ class _DetailScreenState extends State<DetailScreen> {
         context,
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Column(
-            children: [
-              _buildDiscount(context, widget.item.discount),
-              _buildImage(size, widget.item.imagePath, colorValue, sizeValue),
-            ],
-          ),
-          Expanded(
-            child: Stack(
-              alignment: AlignmentDirectional.bottomCenter,
+      body: BlocListener<CartBloc, CartState>(
+        listener: (context, state) {
+          if (state is CartAddSuccess) {
+            Scaffold.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(SnackBar(
+                backgroundColor: Theme.of(context).primaryColor,
+                content: Text(state.message,
+                    style: const TextStyle(color: Colors.white)),
+              ));
+          }
+        },
+        child: Column(
+          children: [
+            Column(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(kPadding),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20.0),
-                      topRight: Radius.circular(20.0),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildNameRow(
-                        context,
-                        widget.item.itemName,
-                        widget.item.rating,
-                      ),
-                      const SizedBox(height: 10),
-                      const Text('Description Text'),
-                      const SizedBox(height: 20),
-                      _buildSizeRow(context, sizeValue),
-                      const SizedBox(height: 10),
-                      _buildColorRow(context, colorValue),
-                    ],
-                  ),
-                ),
-                _buildPriceRow(widget.item.itemPrice, size, context),
+                _buildDiscount(context, widget.item.discount),
+                _buildImage(size, widget.item.imagePath, colorValue, sizeValue),
               ],
             ),
-          )
-        ],
+            Expanded(
+              child: Stack(
+                alignment: AlignmentDirectional.bottomCenter,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(kPadding),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildNameRow(
+                          context,
+                          widget.item.itemName,
+                          widget.item.rating,
+                        ),
+                        const SizedBox(height: 10),
+                        const Text('Description Text'),
+                        const SizedBox(height: 20),
+                        _buildSizeRow(context, sizeValue),
+                        const SizedBox(height: 10),
+                        _buildColorRow(context, colorValue),
+                      ],
+                    ),
+                  ),
+                  _buildPriceRow(widget.item.itemPrice, size, context),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -130,7 +148,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
           ),
           FlatButton(
-            onPressed: () {},
+            onPressed: () => _handleAddToCartButton(),
             highlightColor: Theme.of(context).accentColor,
             splashColor: Theme.of(context).accentColor,
             shape: RoundedRectangleBorder(

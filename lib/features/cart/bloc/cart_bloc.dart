@@ -23,6 +23,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
         final newState = currentState.copyWith(count: newCount);
 
+        yield const CartAddSuccess('Sukses Menambahkan Item');
         yield newState;
       }
     }
