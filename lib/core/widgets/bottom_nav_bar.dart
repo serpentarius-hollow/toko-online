@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-enum NavBarMenu { shop, favorites, order, account }
-
 class BottomNavBar extends StatelessWidget {
-  final NavBarMenu activeMenu;
+  final int indexActive;
   final Size size;
 
   const BottomNavBar({
     Key key,
+    @required this.indexActive,
     @required this.size,
-    @required this.activeMenu,
   }) : super(key: key);
 
   @override
@@ -28,7 +26,7 @@ class BottomNavBar extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Icons.local_mall,
-                    color: activeMenu == NavBarMenu.shop
+                    color: indexActive == 0
                         ? Theme.of(context).primaryColor
                         : null,
                   ),
@@ -37,7 +35,7 @@ class BottomNavBar extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Icons.favorite,
-                    color: activeMenu == NavBarMenu.favorites
+                    color: indexActive == 1
                         ? Theme.of(context).primaryColor
                         : null,
                   ),
@@ -54,7 +52,7 @@ class BottomNavBar extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Icons.library_books,
-                    color: activeMenu == NavBarMenu.order
+                    color: indexActive == 2
                         ? Theme.of(context).primaryColor
                         : null,
                   ),
@@ -63,7 +61,7 @@ class BottomNavBar extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Icons.person,
-                    color: activeMenu == NavBarMenu.account
+                    color: indexActive == 3
                         ? Theme.of(context).primaryColor
                         : null,
                   ),

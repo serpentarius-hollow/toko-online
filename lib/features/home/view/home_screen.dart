@@ -1,11 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/widgets/bottom_nav_bar.dart';
-import '../../cart/bloc/cart_bloc.dart';
+import '../../../core/widgets/cart_button.dart';
+import '../../favorites/favorites_body.dart';
+import '../../orders/orders_body.dart';
+import '../../profile/profile_body.dart';
 import 'home_body.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final _pageController = PageController();
+
+  int pageIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    pageIndex = 0;
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _handlePageChange(int index) {
+    setState(() {
+      pageIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -13,12 +42,21 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: _buildAppBar(context),
       backgroundColor: Theme.of(context).backgroundColor,
-      body: const HomeBody(),
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) => _handlePageChange(index),
+        children: const [
+          HomeBody(),
+          FavoritesBody(),
+          OrdersBody(),
+          ProfileBody(),
+        ],
+      ),
       floatingActionButton: CartButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavBar(
         size: size,
-        activeMenu: NavBarMenu.shop,
+        indexActive: pageIndex,
       ),
     );
   }
@@ -44,49 +82,6 @@ class HomeScreen extends StatelessWidget {
           icon: Icon(Icons.search),
           onPressed: null,
         ),
-      ],
-    );
-  }
-}
-
-class CartButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: AlignmentDirectional.topEnd,
-      children: [
-        FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          onPressed: null,
-          child: Icon(
-            Icons.shopping_cart,
-            color: Theme.of(context).accentColor,
-          ),
-        ),
-        BlocBuilder<CartBloc, CartState>(
-          builder: (context, state) {
-            if (state is CartLoadSuccess) {
-              return Visibility(
-                visible: state.count > 0,
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    state.count.toString(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .caption
-                        .copyWith(color: Colors.white),
-                  ),
-                ),
-              );
-            }
-            return Container();
-          },
-        )
       ],
     );
   }
