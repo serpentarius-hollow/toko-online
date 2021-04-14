@@ -318,9 +318,9 @@ class _DetailScreenState extends State<DetailScreen> {
       backgroundColor: Colors.transparent,
       elevation: 0,
       actions: [
-        GestureDetector(
-          onTap: onFavoriteButtonPressed,
-          child: CircleAvatar(
+        IconButton(
+          onPressed: onFavoriteButtonPressed,
+          icon: CircleAvatar(
             radius: 15,
             backgroundColor: isFavorite ? Colors.red : Colors.transparent,
             child: Icon(
